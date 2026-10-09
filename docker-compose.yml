@@ -5,7 +5,7 @@ services:
       POSTGRES_DB: moto
       POSTGRES_USER: moto
       POSTGRES_PASSWORD: moto
-    ports: ["5432:5432"]
+    ports: ["5433:5432"]
     volumes: [pgdata:/var/lib/postgresql/data]
 volumes:
   pgdata:
