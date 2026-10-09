@@ -8,4 +8,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/auth/", include("accounts.urls", namespace="accounts")),
     path("api/driver/", include("drivers.urls", namespace="drivers")),
+    path("api/rides/", include("rides.urls", namespace="rides")),
 ]

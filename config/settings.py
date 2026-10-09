@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 ]
 
-INSTALLED_APPS += ["rest_framework", "accounts", "drivers"]
+INSTALLED_APPS += ["rest_framework", "accounts", "drivers", "rides"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
