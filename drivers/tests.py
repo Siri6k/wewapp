@@ -16,21 +16,21 @@ class DriverTests(APITestCase):
 
     def go_online(self, **extra):
         payload = {"latitude": -10.98, "longitude": 26.74, **extra}
-        return self.client.post("api/driver/online/", payload, format="json")
+        return self.client.post("/api/driver/online/", payload, format="json")
 
     def set_plate(self, plate="ab 123 cd"):
-        return self.client.patch("api/driver/profile/", {"plate": plate}, format="json")
+        return self.client.patch("/api/driver/profile/", {"plate": plate}, format="json")
 
     def test_unauthenticated_refused(self):
-        self.assertEqual(APIClient().get("api/driver/profile/").status_code, 401)
+        self.assertEqual(APIClient().get("/api/driver/profile/").status_code, 401)
 
     def test_passenger_forbidden(self):
         client = APIClient()
         client.force_authenticate(self.passenger)
-        self.assertEqual(client.get("api/driver/profile/").status_code, 403)
+        self.assertEqual(client.get("/api/driver/profile/").status_code, 403)
 
     def test_profile_created_on_first_get(self):
-        res = self.client.get("api/driver/profile/")
+        res = self.client.get("/api/driver/profile/")
         self.assertEqual(res.status_code, 200)
         self.assertFalse(res.data["is_online"])
         self.assertEqual(res.data["plate"], "")
@@ -40,15 +40,15 @@ class DriverTests(APITestCase):
         self.assertEqual(res.data["plate"], "AB 123 CD")
 
     def test_cannot_set_online_flag_via_profile(self):
-        self.client.patch("api/driver/profile/", {"is_online": True}, format="json")
-        self.assertFalse(self.client.get("api/driver/profile/").data["is_online"])
+        self.client.patch("/api/driver/profile/", {"is_online": True}, format="json")
+        self.assertFalse(self.client.get("/api/driver/profile/").data["is_online"])
 
     def test_online_requires_plate(self):
         self.assertEqual(self.go_online().status_code, 400)
 
     def test_online_requires_location(self):
         self.set_plate()
-        res = self.client.post("api/driver/online/", {}, format="json")
+        res = self.client.post("/api/driver/online/", {}, format="json")
         self.assertEqual(res.status_code, 400)
 
     def test_online_rejects_invalid_latitude(self):
@@ -65,7 +65,9 @@ class DriverTests(APITestCase):
 
     def test_location_refused_when_offline(self):
         res = self.client.post(
-            "api/driver/location/", {"latitude": -10.9, "longitude": 26.7}, format="json"
+            "/api/driver/location/",
+            {"latitude": -10.9, "longitude": 26.7},
+            format="json",
         )
         self.assertEqual(res.status_code, 409)
 
@@ -73,7 +75,9 @@ class DriverTests(APITestCase):
         self.set_plate()
         self.go_online()
         res = self.client.post(
-            "api/driver/location/", {"latitude": -10.99, "longitude": 26.75}, format="json"
+            "/api/driver/location/",
+            {"latitude": -10.99, "longitude": 26.75},
+            format="json",
         )
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data["latitude"], -10.99)
@@ -81,6 +85,6 @@ class DriverTests(APITestCase):
     def test_offline(self):
         self.set_plate()
         self.go_online()
-        res = self.client.post("api/driver/offline/")
+        res = self.client.post("/api/driver/offline/")
         self.assertEqual(res.status_code, 200)
         self.assertFalse(res.data["is_online"])
