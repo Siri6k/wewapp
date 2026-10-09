@@ -1,4 +1,4 @@
-# [WewApp] : le moto-taxi à prix fixe
+# WewApp : le moto-taxi à prix fixe
 
 > Application de réservation de moto-taxis pour **Likasi** (ville pilote), puis **Lubumbashi**.
 > Promesse : **le prix affiché avant la course est le prix payé après.**
@@ -124,7 +124,7 @@ Pour proposer votre aide :
 
 ## Contact
 
-[Sirisk] : [niplandjango@gmail.com]
+Sirisk : niplandjango@gmail.com
 
 ## Licence
 
