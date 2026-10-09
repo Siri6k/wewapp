@@ -110,7 +110,7 @@ L'administration est disponible sur `http://localhost:8000/admin/`.
 | GET | `api/rides/<int:pk>/` | Detaills de la course |
 | GET | `api/rides/driver/offers/pending/` | Liste de course en attente |
 | POST | `api/rides/offers/<int:pk>/accept/` | Accepter une course |
-| POST | `api/rides/offers/<int:pk>/decline/` | Refuse une course |
+| POST | `api/rides/offers/<int:pk>/decline/` | Refuser une course |
 
 ## Comment participer
 
