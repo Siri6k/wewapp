@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: moto
+      POSTGRES_USER: moto
+      POSTGRES_PASSWORD: moto
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+volumes:
+  pgdata:
