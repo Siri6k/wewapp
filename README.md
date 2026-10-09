@@ -105,6 +105,12 @@ L'administration est disponible sur `http://localhost:8000/admin/`.
 | POST | `api/driver/online/` | Passer en ligne (avec la position) |
 | POST | `api/driver/offline/` | Passer hors ligne |
 | POST | `api/driver/location/` | Mettre à jour la position |
+| POST | `api/rides/estimate/` | Estimer le prix de la course |
+| POST | `api/rides/` | Creer une course |
+| GET | `api/rides/<int:pk>/` | Detaills de la course |
+| GET | `api/rides/driver/offers/pending/` | Liste de course en attente |
+| POST | `api/rides/offers/<int:pk>/accept/` | Accepter une course |
+| POST | `api/rides/offers/<int:pk>/decline/` | Refuse une course |
 
 ## Comment participer
 
@@ -113,7 +119,7 @@ Le projet cherche des profils variés, pas seulement des développeurs :
 - **Développeurs backend (Django)** : mise en relation, calcul de prix, tests.
 - **Développeurs mobile (React Native / Expo)** : écrans passager et motard.
 - **Design / UX** : interface simple, lisible en plein soleil, utilisable d'une main.
-- **Terrain** : motards et passagers testeurs à Likasi et Lubumbashi, retours sur les prix et les trajets.
+- **Terrain** : motards et passagers testeurs à Kisangani, Kolwezi, kinshasa, Goma et Lubumbashi, retours sur les prix et les trajets.
 - **Cartographie locale** : quartiers, repères connus, trajets types pour la grille de prix.
 
 Pour proposer votre aide :

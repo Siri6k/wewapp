@@ -1,7 +1,8 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from .geo import haversine_km
-from .models import Ride
+from .models import Ride, RideOffer
 
 MIN_DISTANCE_KM = 0.1
 
@@ -33,6 +34,8 @@ class RideCreateSerializer(PointsSerializer):
 
 
 class RideSerializer(serializers.ModelSerializer):
+    driver = serializers.SerializerMethodField()
+
     class Meta:
         model = Ride
         fields = [
@@ -47,5 +50,61 @@ class RideSerializer(serializers.ModelSerializer):
             "price",
             "currency",
             "created_at",
+            "driver",
         ]
         read_only_fields = fields
+
+    def get_driver(self, ride):
+        if ride.driver_id is None:
+            return None
+        profile = getattr(ride.driver, "driver_profile", None)
+        return {
+            "name": ride.driver.name,
+            "phone": ride.driver.phone,
+            "plate": profile.plate if profile else "",
+        }
+
+
+class OfferSerializer(serializers.ModelSerializer):
+    ride = serializers.SerializerMethodField()
+    passenger_name = serializers.SerializerMethodField()
+    pickup_distance_km = serializers.SerializerMethodField()
+    seconds_left = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RideOffer
+        fields = [
+            "id",
+            "expires_at",
+            "seconds_left",
+            "passenger_name",
+            "pickup_distance_km",
+            "ride",
+        ]
+        read_only_fields = fields
+
+    def get_ride(self, offer):
+        ride = offer.ride
+        return {
+            "id": ride.id,
+            "origin_lat": ride.origin_lat,
+            "origin_lng": ride.origin_lng,
+            "dest_lat": ride.dest_lat,
+            "dest_lng": ride.dest_lng,
+            "dest_label": ride.dest_label,
+            "distance_km": ride.distance_km,
+            "price": ride.price,
+            "currency": ride.currency,
+        }
+
+    def get_passenger_name(self, offer):
+        return offer.ride.passenger.name
+
+    def get_pickup_distance_km(self, offer):
+        lat, lng = self.context["driver_location"]
+        return round(
+            haversine_km(lat, lng, offer.ride.origin_lat, offer.ride.origin_lng), 2
+        )
+
+    def get_seconds_left(self, offer):
+        return max(0, int((offer.expires_at - timezone.now()).total_seconds()))

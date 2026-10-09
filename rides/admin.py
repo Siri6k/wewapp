@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import PricingConfig, Ride
+from .models import PricingConfig, Ride, RideOffer
 
 
 @admin.register(PricingConfig)
@@ -29,4 +29,10 @@ class RideAdmin(admin.ModelAdmin):
         "currency",
         "created_at",
     )
+    list_filter = ("status",)
+
+
+@admin.register(RideOffer)
+class RideOfferAdmin(admin.ModelAdmin):
+    list_display = ("id", "ride", "driver", "status", "expires_at")
     list_filter = ("status",)

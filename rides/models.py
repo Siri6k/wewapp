@@ -67,4 +67,33 @@ class Ride(models.Model):
         return f"Course {self.pk} ({self.status})"
 
 
+class RideOffer(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "En attente"
+        ACCEPTED = "accepted", "Acceptée"
+        DECLINED = "declined", "Refusée"
+        EXPIRED = "expired", "Expirée"
+
+    ride = models.ForeignKey(Ride, on_delete=models.CASCADE, related_name="offers")
+    driver = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ride_offers"
+    )
+    status = models.CharField(
+        max_length=10, choices=Status.choices, default=Status.PENDING
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["ride", "driver"], name="unique_offer_per_ride_and_driver"
+            )
+        ]
+
+    def __str__(self):
+        return f"Offre {self.pk} : course {self.ride_id} → {self.driver_id} ({self.status})"
+
+
 ACTIVE_STATUSES = [Ride.Status.SEARCHING, Ride.Status.ACCEPTED, Ride.Status.IN_PROGRESS]
