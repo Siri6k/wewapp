@@ -211,3 +211,8 @@ yarn-debug.log*
 yarn-error.log*".env" 
 ".env" 
 category.sql
+.env
+.venv/
+__pycache__/
+*.pyc
+db.sqlite3

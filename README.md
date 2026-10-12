@@ -74,6 +74,8 @@ Ensuite : pilote avec de vrais motards à Likasi, grille de prix co-construite a
 Prérequis : Python 3.11+, Docker.
 
 ```bash
+cp .env.example .env     # Windows : copy .env.example .env
+# puis éditez .env
 # Base de données
 docker compose up -d
 
