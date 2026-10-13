@@ -231,13 +231,13 @@ class DispatchTests(APITestCase):
         ride_id = self.book().data["id"]
         offer = RideOffer.objects.get()
         self.as_user(near).post(f"{API}/rides/offers/{offer.id}/decline/")
-        Ride.objects.update(created_at=timezone.now() - timedelta(minutes=5))
+        Ride.objects.update(search_started_at=timezone.now() - timedelta(minutes=5))
         res = self.client.get(f"{API}/rides/{ride_id}/")
         self.assertEqual(res.data["status"], "no_driver")
 
     def test_passenger_can_book_again_after_timeout(self):
         self.book()
-        Ride.objects.update(created_at=timezone.now() - timedelta(minutes=5))
+        Ride.objects.update(search_started_at=timezone.now() - timedelta(minutes=5))
         res = self.book()
         self.assertEqual(res.status_code, 201)
         self.assertEqual(Ride.objects.count(), 2)

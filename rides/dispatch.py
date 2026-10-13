@@ -77,7 +77,7 @@ def advance_ride(ride_id):
             driver=profile.user,
             expires_at=now + timedelta(seconds=OFFER_TIMEOUT_SECONDS),
         )
-    elif now - ride.created_at > timedelta(seconds=SEARCH_TIMEOUT_SECONDS):
+    elif now - ride.search_started_at > timedelta(seconds=SEARCH_TIMEOUT_SECONDS):
         ride.status = Ride.Status.NO_DRIVER
         ride.save(update_fields=["status"])
     return ride

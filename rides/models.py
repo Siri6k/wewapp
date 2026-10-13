@@ -4,6 +4,9 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
+
 
 class PricingConfig(models.Model):
     currency = models.CharField(max_length=3, default="CDF")
@@ -59,6 +62,9 @@ class Ride(models.Model):
         max_length=12, choices=Status.choices, default=Status.SEARCHING
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    search_started_at = models.DateTimeField(default=timezone.now)
+    started_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -94,6 +100,17 @@ class RideOffer(models.Model):
 
     def __str__(self):
         return f"Offre {self.pk} : course {self.ride_id} → {self.driver_id} ({self.status})"
+
+
+class Rating(models.Model):
+    ride = models.OneToOneField(Ride, on_delete=models.CASCADE, related_name="rating")
+    stars = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.stars}/5 (course {self.ride_id})"
 
 
 ACTIVE_STATUSES = [Ride.Status.SEARCHING, Ride.Status.ACCEPTED, Ride.Status.IN_PROGRESS]

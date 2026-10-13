@@ -33,8 +33,14 @@ class RideCreateSerializer(PointsSerializer):
     )
 
 
+class RatingSerializer(serializers.Serializer):
+    stars = serializers.IntegerField(min_value=1, max_value=5)
+
+
 class RideSerializer(serializers.ModelSerializer):
     driver = serializers.SerializerMethodField()
+    passenger = serializers.SerializerMethodField()
+    rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Ride
@@ -50,7 +56,11 @@ class RideSerializer(serializers.ModelSerializer):
             "price",
             "currency",
             "created_at",
+            "started_at",
+            "completed_at",
             "driver",
+            "passenger",
+            "rating",
         ]
         read_only_fields = fields
 
@@ -58,11 +68,33 @@ class RideSerializer(serializers.ModelSerializer):
         if ride.driver_id is None:
             return None
         profile = getattr(ride.driver, "driver_profile", None)
-        return {
+        data = {
             "name": ride.driver.name,
             "phone": ride.driver.phone,
             "plate": profile.plate if profile else "",
+            "latitude": None,
+            "longitude": None,
         }
+        live = ride.status in (Ride.Status.ACCEPTED, Ride.Status.IN_PROGRESS)
+        if live and profile and profile.latitude is not None:
+            data["latitude"] = profile.latitude
+            data["longitude"] = profile.longitude
+        return data
+
+    def get_passenger(self, ride):
+        # Les coordonnées du passager ne sont montrées qu'au motard de la course.
+        request = self.context.get("request")
+        if (
+            request is None
+            or ride.driver_id is None
+            or request.user.id != ride.driver_id
+        ):
+            return None
+        return {"name": ride.passenger.name, "phone": ride.passenger.phone}
+
+    def get_rating(self, ride):
+        rating = getattr(ride, "rating", None)
+        return rating.stars if rating else None
 
 
 class OfferSerializer(serializers.ModelSerializer):
