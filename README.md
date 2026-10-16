@@ -119,6 +119,8 @@ L'administration est disponible sur `http://localhost:8000/admin/`.
 | POST | `api/rides/<int:pk>/complete/` | Cloturer une course |
 | POST | `api/rides/<int:pk>/cancel/` | Annuler une course |
 | POST | `api/rides/<int:pk>/rating/` | Noter une course |
+| POST | `api/reports/` | Signaler un probleme durant la course |
+| GET | `api/reports/` | Voir la liste des derniers signalements |
 
 ## Comment participer
 

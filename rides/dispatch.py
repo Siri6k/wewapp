@@ -9,7 +9,7 @@ from .geo import haversine_km
 from .models import Ride, RideOffer
 
 OFFER_TIMEOUT_SECONDS = 60
-LOCATION_MAX_AGE_SECONDS = 30
+LOCATION_MAX_AGE_SECONDS = 60
 MAX_PICKUP_KM = 5
 SEARCH_TIMEOUT_SECONDS = 180
 

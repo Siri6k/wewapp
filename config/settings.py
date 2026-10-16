@@ -46,7 +46,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 ]
 
-INSTALLED_APPS += ["rest_framework", "accounts", "drivers", "rides"]
+INSTALLED_APPS += [
+    "rest_framework",
+    "accounts",
+    "drivers",
+    "rides",
+    "support",
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -103,6 +109,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_THROTTLE_RATES": {"reports": "20/day"},
 }
 
 SIMPLE_JWT = {

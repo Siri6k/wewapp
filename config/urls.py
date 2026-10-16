@@ -9,4 +9,5 @@ urlpatterns = [
     path("api/auth/", include("accounts.urls", namespace="accounts")),
     path("api/driver/", include("drivers.urls", namespace="drivers")),
     path("api/rides/", include("rides.urls", namespace="rides")),
+    path("api/reports/", include("support.urls", namespace="support")),
 ]
